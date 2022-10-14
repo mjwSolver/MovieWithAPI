@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MovieWithAPI</string>
+    <string name="justString">stringing</string>
+</resources>
