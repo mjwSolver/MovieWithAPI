@@ -1,32 +1,44 @@
 package com.visualprogrammingclass.moviewithapi.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.init
 import com.visualprogrammingclass.moviewithapi.R
-import com.visualprogrammingclass.moviewithapi.databinding.CardGenreBinding
-import com.visualprogrammingclass.moviewithapi.model.Genre
+import com.visualprogrammingclass.moviewithapi.databinding.CardProductionCompanyBinding
+import com.visualprogrammingclass.moviewithapi.helper.Const
+import com.visualprogrammingclass.moviewithapi.model.ProductionCompany
 
 
-class GenreAdapter(private val dataSet: List<Genre>) :
-        RecyclerView.Adapter<GenreAdapter.ViewHolder>() {
+class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
+        RecyclerView.Adapter<CompanyAdapter.ViewHolder>() {
 
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardBinding = CardGenreBinding.bind(view)
+        val cardBind = CardProductionCompanyBinding.bind(view)
 
         init {
             // Define click listener for the ViewHolder's View.
-            cardBinding.genreTextViewInCardView.text = dataSet[adapterPosition].name
+            Glide.with(view.context)
+                .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
+                .into(cardBind.productionCompanyBrandImageView)
         }
+
     }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.card_genre, viewGroup, false)
+                .inflate(R.layout.card_production_company, viewGroup, false)
 
         return ViewHolder(view)
     }

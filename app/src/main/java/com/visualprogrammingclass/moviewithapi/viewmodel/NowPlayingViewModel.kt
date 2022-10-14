@@ -1,6 +1,5 @@
 package com.visualprogrammingclass.moviewithapi.viewmodel
 
-import android.graphics.Movie
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,13 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.visualprogrammingclass.moviewithapi.model.Genre
 import com.visualprogrammingclass.moviewithapi.model.MovieDetails
 import com.visualprogrammingclass.moviewithapi.model.NowPlayingResult
-import com.visualprogrammingclass.moviewithapi.repository.NowPlayingRespository
+import com.visualprogrammingclass.moviewithapi.model.ProductionCompany
+import com.visualprogrammingclass.moviewithapi.repository.NowPlayingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NowPlayingViewModel @Inject constructor(private val repository: NowPlayingRespository) : ViewModel() {
+class NowPlayingViewModel @Inject constructor(private val repository: NowPlayingRepository) : ViewModel() {
 
     private val _nowPlaying: MutableLiveData<ArrayList<NowPlayingResult>> by lazy { MutableLiveData<ArrayList<NowPlayingResult>>() }
     val nowPlaying: LiveData<ArrayList<NowPlayingResult>>
@@ -38,14 +38,20 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
     private val _movieGenre :MutableLiveData<List<Genre>> by lazy { MutableLiveData<List<Genre>>() }
     val movieGenre: LiveData<List<Genre>> get() = _movieGenre
 
+    private val _productionCompany :MutableLiveData<List<ProductionCompany>> by lazy { MutableLiveData<List<ProductionCompany>>() }
+    val productionCompany: LiveData<List<ProductionCompany>> get() = _productionCompany
+
+    private val _movieDescription :MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val movieDescription: LiveData<String> get()= _movieDescription
+
     fun getMovieDetail(apiKey:String, movieid:Int) = viewModelScope.launch {
         repository.getMovieDetailResults(apiKey, movieid).let { response ->
             if(response.isSuccessful){
                 _moviedetail.postValue(response.body() as MovieDetails)
                 _movieGenre.postValue(response.body()?.genres as List<Genre>)
-            } else {
-                Log.e("Get Movie Details Data", "failed!")
-            }
+                _productionCompany.postValue(response.body()?.production_companies as List<ProductionCompany>)
+                _movieDescription.postValue(response.body()?.overview as String)
+            } else { Log.e("Get Movie Details Data", "failed!") }
         }
     }
 
