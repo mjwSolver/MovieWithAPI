@@ -23,7 +23,7 @@ class NowPlayingAdapter(private val dataSet: ArrayList<NowPlayingResult>) :
      * Provide a reference to the type of views that you are using
      * (upcoming ViewHolder).
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView
         val tvReleased: TextView
         val cvNowPlaying: CardView
@@ -38,7 +38,7 @@ class NowPlayingAdapter(private val dataSet: ArrayList<NowPlayingResult>) :
 
         }
 
-        fun onClickToDetail(dataSet: ArrayList<NowPlayingResult>, theContext: Context) {
+        fun onClickToDetail(theContext: Context) {
             val intenting = Intent(theContext, MovieDetailActivity::class.java)
                 .putExtra("movieid", dataSet[adapterPosition].id)
             theContext.startActivity(intenting)
@@ -62,7 +62,7 @@ class NowPlayingAdapter(private val dataSet: ArrayList<NowPlayingResult>) :
         viewHolder.tvTitle.text = dataSet[position].title
         viewHolder.tvReleased.text = dataSet[position].release_date
         viewHolder.cvNowPlaying.setOnClickListener{
-            viewHolder.onClickToDetail(dataSet, it.context)
+            viewHolder.onClickToDetail(it.context)
         }
 
     }

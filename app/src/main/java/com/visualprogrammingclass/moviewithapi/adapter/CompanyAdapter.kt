@@ -13,6 +13,7 @@ import com.visualprogrammingclass.moviewithapi.R
 import com.visualprogrammingclass.moviewithapi.databinding.CardProductionCompanyBinding
 import com.visualprogrammingclass.moviewithapi.helper.Const
 import com.visualprogrammingclass.moviewithapi.model.ProductionCompany
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
@@ -27,9 +28,11 @@ class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
 
         init {
             // Define click listener for the ViewHolder's View.
-            Glide.with(view.context)
-                .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
-                .into(cardBind.productionCompanyBrandImageView)
+//            if(adapterPosition != -1) {
+//            Glide.with(view.context)
+//                .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
+//                .into(cardBind.productionCompanyBrandImageView)
+//          }
         }
 
     }
@@ -47,6 +50,11 @@ class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        Glide.with(viewHolder.itemView.context)
+            .load(Const.IMG_URL + dataSet[position].logo_path)
+            .into(viewHolder.cardBind.productionCompanyBrandImageView)
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

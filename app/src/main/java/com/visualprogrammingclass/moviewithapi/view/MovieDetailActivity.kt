@@ -2,7 +2,9 @@ package com.visualprogrammingclass.moviewithapi.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.os.Handler
+import android.os.Looper
+import androidx.core.os.HandlerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -20,7 +22,8 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var model:NowPlayingViewModel
     private lateinit var genreAdaptery: GenreAdapter
     private lateinit var companyAdapter: CompanyAdapter
-    private lateinit var horizontalLinearLayoutManager:LinearLayoutManager
+    private lateinit var horizontalGenreLinearLayoutManager:LinearLayoutManager
+    private lateinit var horizontalProductionCompanyLinearLayoutManager:LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,14 +33,19 @@ class MovieDetailActivity : AppCompatActivity() {
         val movieID = intent.getIntExtra("movieid", 0)
 //        Toast.makeText(applicationContext, "Movie ID: $movieID", Toast.LENGTH_SHORT).show()
 
+        runLoadingAnimation()
+
         // initialize the ViewModel
         model = ViewModelProvider(this)[NowPlayingViewModel::class.java]
         // start getting the New Information
         model.getMovieDetail(Const.apikey, movieID)
 
         // Set up the LinearLayoutManager
-        horizontalLinearLayoutManager = LinearLayoutManager(this)
-        horizontalLinearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        horizontalGenreLinearLayoutManager = LinearLayoutManager(this)
+        horizontalGenreLinearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        horizontalProductionCompanyLinearLayoutManager = LinearLayoutManager(this)
+        horizontalProductionCompanyLinearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
         // observers subscribing to changes in viewModel
         observers()
@@ -56,13 +64,13 @@ class MovieDetailActivity : AppCompatActivity() {
         }
 
         model.movieGenre.observe(this){ response ->
-            bind.genreRecyclerView.layoutManager = horizontalLinearLayoutManager
+            bind.genreRecyclerView.layoutManager = horizontalGenreLinearLayoutManager
             genreAdaptery = GenreAdapter(response)
             bind.genreRecyclerView.adapter = genreAdaptery
         }
 
         model.productionCompany.observe(this){response ->
-            bind.productionCompanyRecyclerView.layoutManager = horizontalLinearLayoutManager
+            bind.productionCompanyRecyclerView.layoutManager = horizontalProductionCompanyLinearLayoutManager
             companyAdapter = CompanyAdapter(response)
             bind.productionCompanyRecyclerView.adapter = companyAdapter
         }
@@ -70,6 +78,13 @@ class MovieDetailActivity : AppCompatActivity() {
         model.movieDescription.observe(this){response ->
             bind.movieDescriptionTextView.text = response
         }
+
+    }
+
+    private fun runLoadingAnimation(){
+        val loading = LoadingDialog(this)
+        loading.startLoading(this)
+        Handler(Looper.getMainLooper()).postDelayed({ loading.isDismiss() }, 1000)
 
     }
 

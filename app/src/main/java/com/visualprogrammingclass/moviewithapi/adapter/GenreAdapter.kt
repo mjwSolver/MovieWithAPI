@@ -18,7 +18,9 @@ class GenreAdapter(private val dataSet: List<Genre>) :
 
         init {
             // Define click listener for the ViewHolder's View.
-            cardBinding.genreTextViewInCardView.text = dataSet[adapterPosition].name
+//            if(adapterPosition != -1) {
+//                cardBinding.genreTextViewInCardView.text = dataSet[adapterPosition].name
+//            }
         }
     }
 
@@ -35,6 +37,7 @@ class GenreAdapter(private val dataSet: List<Genre>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        viewHolder.cardBinding.genreTextViewInCardView.text = dataSet[position].name
     }
 
     // Return the size of your dataset (invoked by the layout manager)
