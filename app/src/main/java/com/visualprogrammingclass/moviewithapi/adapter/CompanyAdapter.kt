@@ -1,6 +1,7 @@
 package com.visualprogrammingclass.moviewithapi.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,8 @@ class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
             Glide.with(view.context)
                 .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
                 .into(cardBind.productionCompanyBrandImageView)
+
+//            cardBind.productionCompanyCardView.setCardBackgroundColor(d1fae5)
         }
 
     }

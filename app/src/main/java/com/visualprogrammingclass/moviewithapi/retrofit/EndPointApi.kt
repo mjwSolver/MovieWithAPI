@@ -23,7 +23,7 @@ interface EndPointApi {
     ):Response<MovieDetails>
 
 //    @GET("movie/{movie_id}")
-//    suspend fun getMovieGenre(
+//    suspend fun getAMovieFromNowPlaying(
 //        @Path("movie_id") Id:Int,
 //        @Query("api_key") apiKey:String
 //    ):Response<MovieDetails>

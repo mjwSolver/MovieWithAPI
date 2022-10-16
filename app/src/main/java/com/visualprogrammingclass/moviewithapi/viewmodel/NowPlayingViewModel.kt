@@ -18,8 +18,7 @@ import javax.inject.Inject
 class NowPlayingViewModel @Inject constructor(private val repository: NowPlayingRepository) : ViewModel() {
 
     private val _nowPlaying: MutableLiveData<ArrayList<NowPlayingResult>> by lazy { MutableLiveData<ArrayList<NowPlayingResult>>() }
-    val nowPlaying: LiveData<ArrayList<NowPlayingResult>>
-    get() = _nowPlaying
+    val nowPlaying: LiveData<ArrayList<NowPlayingResult>> get() = _nowPlaying
 
 
     fun getNowPlaying(apiKey: String, language: String, page: Int) = viewModelScope.launch {
@@ -31,6 +30,8 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
             }
         }
     }
+
+
 
     private val _moviedetail :MutableLiveData<MovieDetails> by lazy { MutableLiveData<MovieDetails>() }
     val moviedetail: LiveData<MovieDetails> get() = _moviedetail
@@ -47,6 +48,8 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
     private val _originalLanguage :MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val originalLanguage: LiveData<String> get()= _originalLanguage
 
+    private val _posterPath: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val posterPath: LiveData<String> get()=_posterPath
 
     fun getMovieDetail(apiKey:String, movieid:Int) = viewModelScope.launch {
         repository.getMovieDetailResults(apiKey, movieid).let { response ->
@@ -56,6 +59,7 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
                 _productionCompany.postValue(response.body()?.production_companies as List<ProductionCompany>)
                 _movieDescription.postValue(response.body()?.overview as String)
                 _originalLanguage.postValue(response.body()?.original_language as String)
+                _posterPath.postValue(response.body()?.poster_path as String)
             } else { Log.e("Get Movie Details Data", "failed!") }
         }
     }

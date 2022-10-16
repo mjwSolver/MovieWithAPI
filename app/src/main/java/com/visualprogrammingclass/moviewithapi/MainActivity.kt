@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        supportActionBar?.title = "Now Playing"
+
         viewModel = ViewModelProvider(this)[NowPlayingViewModel::class.java]
         viewModel.getNowPlaying(Const.apikey, "en-US", 1)
 

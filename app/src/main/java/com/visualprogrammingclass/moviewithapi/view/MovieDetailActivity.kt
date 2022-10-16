@@ -67,8 +67,12 @@ class MovieDetailActivity : AppCompatActivity() {
 
             loaded = Glide.with(applicationContext).load(Const.IMG_URL + response.backdrop_path)
             loaded.into(bind.moviePosterBackFropImageView)
-            loaded.into(bind.moviePosterImageView)
 
+        }
+
+        model.posterPath.observe(this){response->
+            loaded = Glide.with(applicationContext).load(Const.IMG_URL + response)
+            loaded.into(bind.moviePosterImageView)
         }
 
         model.movieGenre.observe(this){ response ->
