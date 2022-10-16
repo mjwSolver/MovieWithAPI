@@ -44,6 +44,10 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
     private val _movieDescription :MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val movieDescription: LiveData<String> get()= _movieDescription
 
+    private val _originalLanguage :MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val originalLanguage: LiveData<String> get()= _originalLanguage
+
+
     fun getMovieDetail(apiKey:String, movieid:Int) = viewModelScope.launch {
         repository.getMovieDetailResults(apiKey, movieid).let { response ->
             if(response.isSuccessful){
@@ -51,6 +55,7 @@ class NowPlayingViewModel @Inject constructor(private val repository: NowPlaying
                 _movieGenre.postValue(response.body()?.genres as List<Genre>)
                 _productionCompany.postValue(response.body()?.production_companies as List<ProductionCompany>)
                 _movieDescription.postValue(response.body()?.overview as String)
+                _originalLanguage.postValue(response.body()?.original_language as String)
             } else { Log.e("Get Movie Details Data", "failed!") }
         }
     }

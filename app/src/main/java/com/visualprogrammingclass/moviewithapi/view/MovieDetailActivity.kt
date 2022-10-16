@@ -1,13 +1,14 @@
 package com.visualprogrammingclass.moviewithapi.view
 
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.core.os.HandlerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.visualprogrammingclass.moviewithapi.adapter.CompanyAdapter
 import com.visualprogrammingclass.moviewithapi.adapter.GenreAdapter
 import com.visualprogrammingclass.moviewithapi.databinding.ActivityMovieDetailBinding
@@ -29,6 +30,11 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bind = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(bind.root)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+//        setSupportActionBar(bind.movieDetailsToolBar)
+        supportActionBar?.title = "back"
 
         val movieID = intent.getIntExtra("movieid", 0)
 //        Toast.makeText(applicationContext, "Movie ID: $movieID", Toast.LENGTH_SHORT).show()
@@ -54,12 +60,14 @@ class MovieDetailActivity : AppCompatActivity() {
 
     fun observers() {
 
+        var loaded: RequestBuilder<Drawable>
+
         model.moviedetail.observe(this) { response ->
             bind.movieTitleInDetailTextView.apply { text = response.title }
 
-            Glide.with(applicationContext)
-                .load(Const.IMG_URL + response.backdrop_path)
-                .into(bind.imageView)
+            loaded = Glide.with(applicationContext).load(Const.IMG_URL + response.backdrop_path)
+            loaded.into(bind.moviePosterBackFropImageView)
+            loaded.into(bind.moviePosterImageView)
 
         }
 
@@ -79,6 +87,9 @@ class MovieDetailActivity : AppCompatActivity() {
             bind.movieDescriptionTextView.text = response
         }
 
+        model.originalLanguage.observe(this){response ->
+            bind.languageTextView.text = response
+        }
     }
 
     private fun runLoadingAnimation(){
