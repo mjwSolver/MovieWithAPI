@@ -1,12 +1,16 @@
 package com.visualprogrammingclass.moviewithapi.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.init
@@ -26,6 +30,7 @@ class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
      */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cardBind = CardProductionCompanyBinding.bind(view)
+        val thisImageView = cardBind.productionCompanyBrandImageView
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -34,14 +39,22 @@ class CompanyAdapter(private val dataSet: List<ProductionCompany>) :
 //                .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
 //                .into(cardBind.productionCompanyBrandImageView)
 //          }
+
         }
 
         fun glideImage(view: View){
-            Glide.with(view.context)
+            val theImage = Glide.with(view.context)
                 .load(Const.IMG_URL + dataSet[adapterPosition].logo_path)
-                .into(cardBind.productionCompanyBrandImageView)
+            theImage.into(thisImageView)
 
-//            cardBind.productionCompanyCardView.setCardBackgroundColor(d1fae5)
+            if(thisImageView.drawable != null){
+                val paletteGenerator = Palette.from(thisImageView.drawable.toBitmap()).generate()
+                if(paletteGenerator.darkVibrantSwatch == null) {
+                    cardBind.productionCompanyCardView.setCardBackgroundColor(Color.BLACK)
+                }
+            } // not working, drawable returned null...
+
+
         }
 
     }
